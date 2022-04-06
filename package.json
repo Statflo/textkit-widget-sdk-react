@@ -1,0 +1,141 @@
+{
+  "name": "@statflo/textkit-widget-sdk-react",
+  "description": "React Widget SDK for TextKit",
+  "author": "Statflo Inc.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/textkit-widget-sdk-react.esm.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build && husky install",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "semantic-release": "semantic-release"
+  },
+  "peerDependencies": {
+    "@statflo/textkit-widget-events": ">=1.2.0",
+    "react": ">=16"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "size-limit": [
+    {
+      "path": "dist/textkit-widget-sdk-react.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/textkit-widget-sdk-react.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/statflo/textkit-widget-sdk-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/statflo/textkit-widget-sdk-react/issues"
+  },
+  "homepage": "https://github.com/statflo/textkit-widget-sdk-react#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "analyzeCommits": "semantic-release-conventional-commits",
+    "branches": [
+      "main",
+      "next",
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogTitle": "# Changelog",
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      "@semantic-release/npm",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "CHANGELOG.md",
+            "package.json"
+          ]
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/commit-analyzer": "^9.0.2",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^8.0.4",
+    "@semantic-release/npm": "^9.0.1",
+    "@semantic-release/release-notes-generator": "^10.0.3",
+    "@size-limit/preset-small-lib": "^7.0.8",
+    "@storybook/addon-essentials": "^6.4.20",
+    "@storybook/addon-info": "^5.3.21",
+    "@storybook/addon-links": "^6.4.20",
+    "@storybook/addons": "^6.4.20",
+    "@storybook/react": "^6.4.20",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.0.0",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
+    "babel-loader": "^8.2.4",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-prettier": "3.4.1",
+    "husky": "^7.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-is": "^18.0.0",
+    "semantic-release": "^19.0.2",
+    "semantic-release-conventional-commits": "^3.0.0",
+    "size-limit": "^7.0.8",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "@statflo/textkit-widget-events": "^1.3.2"
+  }
+}
