@@ -1,181 +1,131 @@
-# TSDX React w/ Storybook User Guide
+![TextKit by Statflo](./assets/textkit-logo.svg)
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+# TextKit Widget React SDK
 
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+## Installation
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
-
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
-
-```bash
-npm start # or yarn start
+```node
+yarn add @statflo/textkit-widget-sdk-react
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+## TextKit Provider
 
-Then run either Storybook or the example playground:
+Begin by importing the provider into your `App.tsx` file
 
-### Storybook
+```javascript
+import { TextKitWidgetProvider } from "@statflo/textkit-widget-sdk-react";
+import Widget from "./Widget";
 
-Run inside another terminal:
-
-```bash
-yarn storybook
-```
-
-This loads the stories from `./stories`.
-
-> NOTE: Stories should reference the components as if using the library, similar to the example playground. This means importing from the root project directory. This has been aliased in the tsconfig and the storybook webpack config as a helper.
-
-### Example
-
-Then run the example inside another:
-
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
-
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
-
-To do a one-off build, use `npm run build` or `yarn build`.
-
-To run tests, use `npm test` or `yarn test`.
-
-## Configuration
-
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-/stories
-  Thing.stories.tsx # EDIT THIS
-/.storybook
-  main.js
-  preview.js
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [size-limit](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
+export default function App() {
+  return (
+    <TextKitWidgetProvider header="My header" footer="My footer">
+      <Widget />
+    </TextKitWidgetProvider>
+  )
 }
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+**Available properties**
 
-## Module Formats
+| Property | Type | Default | Description |
+|--|--|--|--|
+| header | `string` | `undefined` | Initial header value. Recommended for Standard Widgets. |
+| footer | `string` | `undefined` | Initial footer value. Recommended for Standard Widgets. |
+| label | `string` | `undefined` | Required for Action widgets that use the Conversation Scope. |
+| scrollOverride | `boolean` | `false` | Override the default scroll implmentation so you can create and manage your own. |
 
-CJS, ESModules, and UMD module formats are supported.
+## TextKit hook
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+The following hook will give you access to the current widget state along with helpers for performing various functions. When importing this **hook** ensure it's within a child component of the above Provider.
 
-## Deploying the Example Playground
+```javascript
+import { useTextKitWidget } from "@statflo/textkit-widget-sdk-react";
 
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
+export default function Widget() {
+  const { state, setHeader, setFooter } = useTextKitWidget();
 
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+  const handleUpdateHeader = () => {
+    setHeader("My new header");
+  };
+
+  const handleUpdateFooter = () => {
+    setFooter("My new footer");
+  };
+
+  return (
+    <div>
+      <p>My Widget Content</p>
+      <button onClick={handleUpdateHeader}>Update Header</button>
+      <button onClick={handleUpdateFooter}>Update Footer</button>
+    </div>
+  );
+}
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+### Available Properties/Methods
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
+| Property | Type | Property | Description |
+|--|--|--|--|
+| state | `object` | | Current widget state please review below for all the available properties. |
+| setFooter | `function` | `string` | Update the widget footer. Used for Standard Widgets. |
+| setHeader | `function` | `string` | Update the widget header. Used for Standard Widgets. |
+| setLabel | `function` | `string` | Update the widget label. Used for Action Widgets using the Conversation Scope.|
+| setOpen | `function` | `boolean` | Open or close the widget. |
+| setSize | `function` | `WidgetViewSize` | Change the size of the widget. Used for Standard Widgets. Must be an instance of WidgetViewSize which can be imported. See below. |
+| appendMessage | `function` | `string` | The text/string you want to append to the message input. Used for Sendable Widets. |
+| replaceMessage | `function` | `string` | The text/string you want to replace to the message input with. Used for Sendable Widets. |
+| client | `widgetClient` | | Access to the underlying widget class for low level implementations. Read the [Widget SDK Readme](https://github.com/statflo/widget-sdk#readme) for more details. |
+
+### State Properties
+
+When importing `state` from `useTextKitWidget()` these are the available properties.
+
+| Property | Type | Description |
+|--|--|--|
+| context | `object` | Will return the current conversation context. |
+| defaultScroll | `boolean` | Whether you are using the default scrolling functionality or not. Default scrolling will be based on the length of the body and the state of the widget. |
+| isOpen | `boolean` | Whether the widget is opened or not. Used in Standard widgets. |
+| isReady | `boolean` | The state of the widget. This will be `true` when TextKit is aware the widget has been registered. |
+| isShown | `boolean` | Whether the widget is shown or not. Used in Sendables and Action widgets. |
+| maxHeight | `number` | Will return the available maximum height based on the resolution. Great for when creating your own scrolling capabilities. |
+| size | `WidgetViewSize` | Will contain one of the enum values from WidgetViewSize. This is for Standard Widgets only. |
+
+### Widget View Size
+
+```javascript
+import { WidgetViewSize } from "@statflo/textkit-widget-sdk-react";
+
+/**
+ * Example function
+ * 
+ * Available enums
+ * 
+ * WidgetViewSize.Small
+ * WidgetViewSize.Medium
+ * WidgetViewSize.Large
+ */
+setSize(WidgetViewSize.Medium);
 ```
 
-## Named Exports
+## Medium & Large Content Wrappers
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+These helper components listen for the `size` state changes and will display the correct content based on the current state value.
 
-## Including Styles
+**Example**
 
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
+```javascript
+import { MediumContent, LargeContent } from "@statflo/textkit-widget-sdk-react";
 
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
+export default function Widget() {
+  return (
+    <div>
+      <MediumContent>
+        This content will be visible when Standard widgets are in their default view state. WidgetViewState.Medium.
+      </MediumContent>
+      <LargeContent>
+        This content will be visible when Standard widgets are in their default view state. WidgetViewState.Large.
+      </LargeContent>
+    </div>
+  )
+}
 ```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
