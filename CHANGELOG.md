@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.3.0](https://github.com/statflo/textkit-widget-sdk-react/compare/v1.2.0...v1.3.0) (2022-04-07)
+
+
+### Features
+
+* version bump ([594937b](https://github.com/statflo/textkit-widget-sdk-react/commit/594937b1b1647ee0ce1678ebc4ee174400cef655))
+
 # [1.2.0](https://github.com/statflo/textkit-widget-sdk-react/compare/v1.1.0...v1.2.0) (2022-04-06)
 
 
