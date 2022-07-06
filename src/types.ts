@@ -27,6 +27,7 @@ export type TextKitContextProps = {
   setLabel: (val: string) => void;
   setSize: (size: WidgetViewSize) => void;
   setOpen: (ToF: boolean) => void;
+  setShown?: (ToF: boolean) => void;
   appendMessage: (val: string) => void;
   replaceMessage: (val: string) => void;
 };
