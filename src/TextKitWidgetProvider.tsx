@@ -110,6 +110,10 @@ export function TextKitWidgetProvider({
         client?.setState(WidgetState.isOpen, isOpen);
         setState((currState) => ({ ...currState, isOpen }));
       },
+      setShown: (isShown) => {
+        client?.setState(WidgetState.isShown, isShown);
+        setState((currState) => ({ ...currState, isShown }));
+      },
       setSize: (size) => {
         client?.setState(WidgetState.size, size);
         setState((currState) => ({ ...currState, size }));
