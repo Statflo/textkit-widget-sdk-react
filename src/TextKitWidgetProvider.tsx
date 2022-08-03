@@ -77,8 +77,23 @@ export function TextKitWidgetProvider({
 
       // Listen for activeConversation Change
       client.on(EventNames.container.activeConversationChanged, (e) => {
-        console.log('activeConversation', e.payload);
+        //console.log('activeConversation', e.payload);
         setState((currState) => ({ ...currState, context: e.payload }));
+      });
+
+      client.on(EventNames.container.appContextChanged, (e) => {
+        //console.log('appContext', e.payload);
+        setState((currState) => ({ ...currState, app: e.payload }));
+      });
+
+      client.on(EventNames.container.exoContextChanged, (e) => {
+        //console.log('exoContext', e.payload);
+        setState((currState) => ({ ...currState, exo: e.payload }));
+      });
+
+      client.on(EventNames.container.userContextChanged, (e) => {
+        //console.log('userContext', e.payload);
+        setState((currState) => ({ ...currState, user: e.payload }));
       });
 
       // Listen for state changes
